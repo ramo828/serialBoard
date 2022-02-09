@@ -16,17 +16,19 @@ class Board {
     int _stpTime;
     
   public:
-    Board(int pin, int baudrate);
-    void yaz(String msg);
-    void led(int status);
+    Board(int pin, int baudrate);             // 
+    
+    void yaz(String msg);                     //
+    void led(int status);                     // Led
     String oxu();
     bool okay();
     void version();
     void author();
     void help();
-    bool execute(String command);
+    void execute(String command);
     void blink();
     void run();
+    void reset();
     
     void setName(String name){
     _name = name;

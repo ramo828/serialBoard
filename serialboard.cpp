@@ -1,6 +1,7 @@
 #include "serialboard.h"
 #include "Arduino.h"
 
+int count = 0;
 
 Board::Board(int pin, int baudrate){
   pinMode(pin, OUTPUT);
@@ -38,16 +39,66 @@ void Board::author(){
   Serial.println("Created by Mammadli Ramiz");
 }  
 
-bool Board::execute(String command){
-  if(command.equals("ok")){
-    Serial.println("OK");
-    return true;
+void Board::execute(String command){
+
+    String command1, command2;
+    command.trim();
+    if(command.equals("on"))
+      Board::led(ON);
+    else if(command.equals("off"))
+      Board::led(OFF);
+    else if(command.equals("bon")){
+      Board::yaz("Blink calisdirilir...");
+      Board::blink();
+    }
+    else if(command.equals("help"))
+      Board::help();
+    else if(command.equals("run"))
+      Board::run();
+    else if(command.equals("exit"))
+      exit(0);
+    else if(command.startsWith("set")){
+      command1 = command.substring(3,command.length());
+      command1.trim();
+      Board::yaz("SET");
+      if(command1.startsWith("name")){
+        command2 = command1.substring(4,command1.length());
+        command2.trim();
+        Board::setName(command2);
+        Board::yaz("name: "+command2);
+      }
+    else if(command1.startsWith("step")){
+        command2 = command1.substring(4,command1.length());
+        command2.trim();
+        Board::setStep(command2.toInt());
+        Board::yaz("step: "+command2);
+      }
+      else if(command1.startsWith("time")){
+        command2 = command1.substring(4,command1.length());
+        command2.trim();
+        Board::setStpTime(command2.toInt());
+        Board::yaz("Step Time: "+command2);
+      }
+      else if(command1.startsWith("stime")){
+        command2 = command1.substring(5,command1.length());
+        command2.trim();
+//        bo/ard.settime(command2.toInt());
+        Board::yaz("start time: "+command2);
+      }
+      else if(command1.startsWith("limit")){
+        command2 = command1.substring(5,command1.length());
+        command2.trim();
+        Board::setLimit(command2.toInt());
+        Board::yaz("limit: "+command2);
+      }
+      else if(command1.startsWith("reset")){
+       Board::yaz("siralam resetlendi!");
+       Board::reset();
+      }
   }
-  return false;
 }
 
 void Board::blink(){
-  int count = 0;
   while(count < _limit && !BOOTSEL){
     count++;
     Board::yaz(String(count));
@@ -63,6 +114,10 @@ void Board::run(){
   Board::yaz(String(_step));
   Board::yaz(String(_limit));
   Board::yaz(String(_stpTime));
+}
+
+void Board::reset(){
+  count = 0;
 }
 
 void Board::help() {
