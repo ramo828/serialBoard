@@ -46,6 +46,24 @@ bool Board::execute(String command){
   return false;
 }
 
+void Board::blink(){
+  int count = 0;
+  while(count < _limit && !BOOTSEL){
+    count++;
+    Board::yaz(String(count));
+    Board::led(ON);
+    delay(_stpTime);
+    Board::led(OFF);
+    delay(_stpTime);
+  }
+}
+
+void Board::run(){
+  Board::yaz(_name);
+  Board::yaz(String(_step));
+  Board::yaz(String(_limit));
+  Board::yaz(String(_stpTime));
+}
 
 void Board::help() {
   Serial.println("\t Version - version");
