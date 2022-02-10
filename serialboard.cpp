@@ -1,5 +1,6 @@
 #include "serialboard.h"
 #include "Arduino.h"
+#include <Keyboard.h>
 
 int count = 0;
 
@@ -51,6 +52,11 @@ void Board::execute(String command){
       Board::yaz("Blink calisdirilir...");
       Board::blink();
     }
+    else if(command.equals("go")){
+      Board::yaz("Calisdilir...");
+      Board::setBeginTime(15);
+      Board::attack();
+    }
     else if(command.equals("help"))
       Board::help();
     else if(command.equals("run"))
@@ -98,6 +104,8 @@ void Board::execute(String command){
   }
 }
 
+
+
 void Board::blink(){
   while(count < _limit && !BOOTSEL){
     count++;
@@ -129,4 +137,40 @@ void Board::help() {
   Serial.println("\t Sleep (seconds} - sleep (seconds)");
   Serial.println("\t Show options - show opions");
   Serial.println("\t Run - run");
+}
+//Keyboard
+
+void Board::kYaz(String msg){
+  delay(50);
+  Keyboard.println(msg);
+}
+
+void Board::enter() {
+  Keyboard.press(KEY_KEYPAD_ENTER);
+  delay(100);
+  Keyboard.releaseAll();
+}
+
+void Board::down(int step){
+    for(int i = 0; i< step; i++){
+    Board::led(ON);
+    delay(_stpTime/2);
+    Keyboard.press(KEY_DOWN_ARROW);
+    delay(100);
+    Keyboard.releaseAll();
+    Board::led(OFF);
+    delay(_stpTime/2);
+    }
+    Board::enter();
+  }
+
+
+
+  void Board::attack() {
+  delay(_beginStart*1000);
+   while(count < _limit && !BOOTSEL){
+    count++;
+    kYaz("Metros");
+    down(_step+count);
+  }
 }

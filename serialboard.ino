@@ -1,10 +1,7 @@
 #include "serialboard.h"
-#include "skeyboard.h"
-#define LED 25
 
 Board board(LED,9600);
-String command,command1,command2;
-
+String command;
 
 void setup() {
   delay(2000);
